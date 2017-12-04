@@ -1,6 +1,21 @@
-# vuechat
+# Vue Chat client using websockets
 
-> Chat client 
+> Written with [Vue.js](https://vuejs.org/), [Vuex](https://vuex.vuejs.org/en/) and [Buefy](https://buefy.github.io)
+ 
+> Use it with the server here: https://github.com/tobiasbeuving/node-websocket-chatserver 
+ 
+ ##Features
+
+* Connect supplying a username without a roundtrip, other connected users get notified
+* Connection indicator
+* User list
+* Move avatar across the chatroom
+* Send and receive messages
+* Whisper mode (say something only one other user can hear)
+* Change avatar by dropping an image < 200kb on your avatar
+* Server side ping pong
+* (custom) Client side ping pong
+* Disconnect and notify other users
 
 ## Build Setup
 
@@ -16,15 +31,3 @@ npm run build
 
 # build for production and view the bundle analyzer report
 npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
