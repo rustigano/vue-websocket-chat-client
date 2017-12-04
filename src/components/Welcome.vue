@@ -16,6 +16,7 @@
                         <li>User list</li>
                         <li>Move avatar across the chatroom</li>
                         <li>Send and receive messages</li>
+                        <li>Whisper mode (say something only one other user can hear)</li>
                         <li>Change avatar by dropping an image < 200kb on your avatar</li>
                         <li>Server side ping pong</li>
                         <li>(custom) Client side ping pong</li>

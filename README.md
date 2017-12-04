@@ -4,7 +4,7 @@
  
 > Use it with the server here: https://github.com/tobiasbeuving/node-websocket-chatserver 
  
- ##Features
+## Features
 
 * Connect supplying a username without a roundtrip, other connected users get notified
 * Connection indicator
