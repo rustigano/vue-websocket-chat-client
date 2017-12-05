@@ -1,5 +1,6 @@
 <template>
     <div class="card balloon"
+         v-bind:class="{whispered: isWhispered}"
          v-bind:style="{ top: (balloon.sender.y - (balloon.offset)) + 'px', left: balloon.sender.x + 'px' }">
         <div class="card-content">
             <div class="content">
@@ -13,12 +14,16 @@
 
 
 <style scoped>
-    .card {
+    .balloon {
         word-break: break-all;
         max-width: 250px;
         border-radius: 25px;
         position: absolute;
         transition: all 1s;
+    }
+    .balloon.whispered {
+        border-color: black;
+        border-style: dotted solid;
     }
 </style>
 <script>

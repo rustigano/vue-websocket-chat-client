@@ -1,9 +1,8 @@
 # Vue Chat client using websockets
-
-> Written with [Vue.js](https://vuejs.org/), [Vuex](https://vuex.vuejs.org/en/) and [Buefy](https://buefy.github.io)
- 
-> Use it with the server here: https://github.com/tobiasbeuving/node-websocket-chatserver 
- 
+---
+> Made with [Vue.js](https://vuejs.org/), [Vuex](https://vuex.vuejs.org/en/) and [Buefy](https://buefy.github.io)
+> This is the client, use it with this server: https://github.com/tobiasbeuving/node-websocket-chatserver 
+ ---
 ## Features
 
 * Connect supplying a username without a roundtrip, other connected users get notified

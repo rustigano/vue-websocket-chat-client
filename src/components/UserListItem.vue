@@ -1,5 +1,5 @@
 <template>
-    <div><span>{{ user.username }}</span> <span v-show="isMe">(you)</span>
+    <div><span>{{ user.username }}</span> <span v-show="isMe">(you &#129412;)</span>
 
 
 <!--        <a class="button is-small" @click="startVideo()">

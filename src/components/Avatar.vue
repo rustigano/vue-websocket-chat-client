@@ -29,6 +29,7 @@
           return this.user.avatar
         }
       },
+      // @todo refactor whispering
       isPartOfWhisperSession () {
         if (this.$store.getters.getWhisperingTo !== undefined) {
           if (this.$store.getters.getWhisperingTo === this.user.id || this.user.id === this.$store.getters.getMyId) {
