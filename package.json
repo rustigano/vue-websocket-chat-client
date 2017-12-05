@@ -3,7 +3,25 @@
   "version": "1.0.0",
   "description": "Vue Chat client using websockets",
   "author": "Tobias Beuving <tobias@ehhh.nl>",
-  "private": true,
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobiasbeuving/vue-websocket-chat-client.git"
+  },
+  "keywords": [
+    "websockets",
+    "chat-client",
+    "javascript",
+    "vue.js",
+    "avatars",
+    "file-upload"
+  ],
+  "author": "Tobias Beuving",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tobiasbeuving/vue-websocket-chat-client/issues"
+  },
+  "homepage": "https://github.com/tobiasbeuving/vue-websocket-chat-client#readme",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",

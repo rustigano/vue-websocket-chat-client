@@ -37,7 +37,6 @@
 
 <script>
   export default {
-    // @todo 'username' en 'server' uit Vuex store halen ipv via props:
     data: function () {
       return {
         username: this.$store.getters.getUsername,

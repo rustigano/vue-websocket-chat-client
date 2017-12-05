@@ -7,27 +7,30 @@
 ## Features
 
 * Connect supplying a username without a roundtrip, other connected users get notified
+* Chatroom: a 2D space where users are represented by an avatar (profile picture)
+* User list 
+* Move avatar across the chatroom: click anywhere in the chatroom and the avatar moves (animates) to that position 
+* Send and receive messages: messages are displayed in textballoons near the avatar in the chatroomo, and logged in a messagewindow 
+* Whisper mode: click on another user to have a private conversation
+* Change avatar: drop a an image < 200kb directly from your system on your avatar to change it. The image gets sent to the server who in turn sends it to the other users
 * Connection indicator
-* User list
-* Move avatar across the chatroom
-* Send and receive messages
-* Whisper mode (say something only one other user can hear)
-* Change avatar by dropping an image < 200kb on your avatar
-* Server side ping pong
-* (custom) Client side ping pong
+* Server side ping pong (so the server can verify if connections to users are still alive)
+* (custom) Client side ping pong (so the client can verify if it is still connected to the server)
 * Disconnect and notify other users
 
-## Build Setup
-
+##### install dependencies
 ``` bash
-# install dependencies
 npm install
-
-# serve with hot reload at localhost:8080
+```
+##### serve with hot reload at localhost:8080
+``` bash
 npm run dev
-
-# build for production with minification
+```
+##### build for production with minification
+``` bash
 npm run build
-
-# build for production and view the bundle analyzer report
+```
+##### build for production and view the bundle analyzer report
+``` bash
 npm run build --report
+```
