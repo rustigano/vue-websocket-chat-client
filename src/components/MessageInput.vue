@@ -1,25 +1,17 @@
 <template>
-    <div class="box message-input-container"
-         v-bind:style="{ width: columnWidth + 'px'}">
-        <b-field>
             <b-input
+                    class="message-input-container"
+                    v-bind:style="{ width: columnWidth + 'px'}"
                     type="textarea"
                     maxlength="250"
                     v-on:keyup.enter.native="sendMsg"
                     v-model="message"
                     ref="messageInputField"
-                    placeholder="type your message here..."></b-input>
-        </b-field>
-        <button class="button is-primary is-pulled-right" @click="sendMsg()">
-            Send
-        </button>
-    </div>
+                    placeholder="type your message here and press enter to send..."></b-input>
 </template>
 <style scoped>
     .message-input-container {
-        /*height: 250px;*/
         position: absolute;
-        /*background-color: white;*/
         bottom: 0;
     }
 </style>
