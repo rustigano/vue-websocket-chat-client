@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- (unicorn) <span v-if="isMe">&#129412;</span>-->
         <span
                 class="tag"
                 v-bind:class="{ 'is-info': !isMe, 'is-light': isMe}">
@@ -16,21 +15,30 @@
   export default {
     name: 'Message',
     props: ['message'],
-    computed: {
-      isMe () {
-        return this.message.sender === 'me'
-      },
-      isWhispered () {
-        return this.message.whisperTo !== undefined
-      },
-      isWhisperedToMe () {
-        return this.message.whisperTo === this.$store.getters.getMyId
-      },
-      whisperTargetName () {
+    data: function () {
+      return {
+        isMe: false,
+        isWhispered: false,
+        isWhisperedToMe: false,
+        whisperTargetName: ''
+      }
+    },
+    created () {
+      console.log('message mounted')
+      this.isMe = this.message.sender === 'me'
+      this.isWhispered = this.message.whisperTo !== undefined
+      this.isWhisperedToMe = this.message.whisperTo === this.$store.getters.getMyId
+      this.whisperTargetName = this.getWhisperTargetName()
+    },
+    methods: {
+      getWhisperTargetName () {
         if (this.isMe && this.isWhispered) {
           let user = this.$store.getters.getUserById(this.message.whisperTo)
-          if (user !== undefined) return user.username
-          return 'unknown'
+          if (user === undefined) {
+            return 'unknown'
+          } else {
+            return user.username
+          }
         } else {
           return ''
         }
