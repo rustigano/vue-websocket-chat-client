@@ -6,7 +6,7 @@
                 {{ message.sender }}
                 <template v-if="isWhisperedToMe"> &gt; me</template>
                 <template v-if="isMe && isWhispered"> &gt; {{ whisperTargetName }}</template>
-                </span>
+        </span>
         <template v-if="isWhispered"><em>...{{ message.msg }}...</em></template>
         <template v-else>{{ message.msg }}</template>
     </div>
@@ -24,7 +24,6 @@
       }
     },
     created () {
-      console.log('message mounted')
       this.isMe = this.message.sender === 'me'
       this.isWhispered = this.message.whisperTo !== undefined
       this.isWhisperedToMe = this.message.whisperTo === this.$store.getters.getMyId
@@ -34,11 +33,7 @@
       getWhisperTargetName () {
         if (this.isMe && this.isWhispered) {
           let user = this.$store.getters.getUserById(this.message.whisperTo)
-          if (user === undefined) {
-            return 'unknown'
-          } else {
-            return user.username
-          }
+          return user === undefined ? 'unknown' : user.username
         } else {
           return ''
         }

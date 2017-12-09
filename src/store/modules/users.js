@@ -74,12 +74,16 @@ const actions = {
     context.commit('setMyId', id)
   },
   setUsers (context, users) {
-    users.forEach(function (item) {
-      context.commit('createUser', item)
+    return new Promise((resolve, reject) => {
+      users.forEach(item => context.commit('createUser', item))
+      resolve()
     })
   },
   createUser (context, user) {
-    context.commit('createUser', user)
+    return new Promise((resolve, reject) => {
+      context.commit('createUser', user)
+      resolve()
+    })
   },
   updateUser (context, user) {
     context.commit('updateUser', user)
@@ -92,6 +96,12 @@ const actions = {
   },
   deleteUser (context, userid) {
     context.commit('deleteUser', userid)
+  },
+  truncateUserList (context) {
+    return new Promise((resolve, reject) => {
+      context.commit('truncateUserList')
+      resolve()
+    })
   },
   setWhisperingTo (context, userid) {
     context.commit('setWhisperingTo', userid)

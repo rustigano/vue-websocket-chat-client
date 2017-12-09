@@ -6,9 +6,9 @@
             <welcome v-if="!isConnected"></welcome>
         </transition>
         <keep-alive>
-        <b-modal :active.sync="isComponentModalActive" has-modal-card>
-            <connect-to-chat-window></connect-to-chat-window>
-        </b-modal>
+            <b-modal :active.sync="isComponentModalActive" has-modal-card>
+                <connect-to-chat-window></connect-to-chat-window>
+            </b-modal>
         </keep-alive>
     </section>
 
@@ -17,9 +17,11 @@
     .fade-enter-active {
         transition: opacity 2s
     }
+
     .fade-leave-active {
         transition: opacity 1s
     }
+
     .fade-enter, .fade-leave-to {
         opacity: 0
     }

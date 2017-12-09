@@ -1,8 +1,13 @@
 <template>
+
     <div class="chatroom"
-         v-bind:class="{ 'whisper-session-active': whisperSessionActive}"
+         v-bind:style="{ 'background-color': roomBackgroundColor}"
+         @dragover.prevent="dragOverHandler"
+         @drop="dropHandler"
          @click="moveMyAvatar">
-        <video src=""></video>
+        <div class="room-name">{{ roomName}}</div>
+
+        <!--<video src=""></video>-->
         <transition-group name="list" tag="p">
             <avatar
                     v-for="(user, index) in users"
@@ -27,11 +32,21 @@
 <style>
     .chatroom {
         height: 90vh;
-        background-color: #00b3ee;
         transition: background-color 1s ease;
     }
-    .whisper-session-active {
-        background-color: #111111;
+
+    .room-name {
+        position: relative;
+        background-color: black;
+        color: #ffffff;
+        border: 1px solid #eeeeee;
+        left: 2px;
+        top: 2px;
+        font-size: 0.7em;
+        width: 10em;
+        height: 2.2em;
+        padding-top: 5px;
+        padding-left: 5px;
     }
 
     .is-dragging-over-avatar {
@@ -60,7 +75,7 @@
     }
 
     .list-enter-active, .list-leave-active {
-        transition: top 1s, left 1s, opacity 2s;
+        transition: top 1s, left 1s, opacity 1s;
     }
 
     /* Animate avatar when it enters or leaves the chatroom */
@@ -79,6 +94,16 @@
     name: 'Chatroom',
     components: {Avatar, TextBalloon},
     computed: {
+      roomName () {
+        return this.$store.getters.getRoom.name
+      },
+      roomBackgroundColor () {
+        if (this.whisperSessionActive) {
+          return '#111111'
+        } else {
+          return this.$store.getters.getRoom.backgroundColor
+        }
+      },
       users () {
         return this.$store.getters.getUsers
       },
@@ -98,6 +123,17 @@
         let x = e.offsetX
         let y = e.offsetY
         this.$bus.$emit('move-my-avatar-event', {'x': x, 'y': y})
+      },
+      dragOverHandler (e) {},
+      dropHandler (e) {
+        this.$snackbar.open({
+          duration: 5000,
+          message: 'Drop the image onto your avatar to change.',
+          position: 'is-bottom',
+          type: 'is-danger'
+        })
+        e.preventDefault()
+        e.stopPropagation()
       }
     }
   }

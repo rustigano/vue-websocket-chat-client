@@ -48,9 +48,15 @@
       this.$bus.$on('change-avatar-event', (e) => {
         this.conn.send(this.createClientMessage('set-avatar', {'image': e.image}))
       })
+      this.$bus.$on('move-to-room-event', (e) => {
+        this.conn.send(this.createClientMessage('move-to-room', {'id': e.roomId}))
+      })
+      this.$bus.$on('create-room-event', (e) => {
+        this.conn.send(this.createClientMessage('create-room', {'name': e.name}))
+      })
     },
     methods: {
-      createConnection () {
+      createConnection: function () {
         if (this.conn !== undefined) return
         this.conn = new WebSocket(this.$store.getters.getServer + '/?username=' + this.$store.getters.getUsername)
         this.conn.onopen = (e) => {
@@ -82,18 +88,23 @@
         }
         this.conn.onmessage = (e) => {
           var response = JSON.parse(e.data)
+          // console.log(response)
 
           var sender
           var senderName = response.sender
           if (response.sender !== '') {
             sender = this.$store.getters.getUserById(response.sender)
-            if (sender !== undefined) senderName = sender.username
+            if (sender !== undefined) {
+              senderName = response.sender === this.$store.getters.getMyId ? 'You' : sender.username
+            }
           }
 
           switch (response.type) {
             case 'connect':
               this.$store.dispatch('setMyId', response.data.key)
               this.$store.dispatch('setUsers', response.data.users)
+              this.$store.dispatch('setRooms', response.data.rooms)
+              this.$store.dispatch('setRoom', response.data.room.id)
               this.$toast.open('Welcome to the chat')
               break
             case 'disconnect':
@@ -107,6 +118,7 @@
               break
             case 'new-user':
               if (sender === undefined) {
+                if (this.$store.getters.getUserById(response.sender) !== undefined) return
                 this.$store.dispatch('createUser', {
                   'id': response.sender,
                   'username': response.data.username,
@@ -124,7 +136,7 @@
               this.$toast.open(senderName + ' changed avatar')
               break
             case 'msg':
-              if (response.sender === this.$store.getters.getMyId) senderName = 'me'
+              // if (response.sender === this.$store.getters.getMyId) senderName = 'me'
               this.$store.dispatch('createMessage', {
                 sender: senderName,
                 message: response.data.msg,
@@ -139,17 +151,53 @@
             case 'pos':
               this.$store.dispatch('moveAvatar', {id: response.sender, x: response.data.x, y: response.data.y})
               break
+            case 'create-room':
+              this.$store.dispatch('createRoom', response.data.room)
+              if (response.sender === this.$store.getters.getMyId) {
+                this.$toast.open('Room created')
+              }
+              break
+            case 'enters-room':
+              // als ik dan room en users vervangen
+              if (response.sender === this.$store.getters.getMyId) {
+                this.$store.dispatch('truncateUserList')
+                  .then(this.$store.dispatch('setRoom', response.data.roomId))
+                  .then(this.$store.dispatch('setUsers', response.data.users))
+                  .then(this.$toast.open('You entered the room'))
+              } else {
+                this.$store.dispatch('createUser', response.data.user).then(
+                  this.$toast.open(this.getUsername(response.data.user.id) + ' entered the room')
+                )
+              }
+              break
+            case 'leaves-room':
+              // user-list aanpassen
+              this.$store.dispatch('deleteUser', response.sender)
+              // this.$store.dispatch('setRoom', response.data.room)
+              this.$toast.open(senderName + ' left to other room')
+              break
             default:
               console.log('unknown response type')
               break
           }
         }
       },
+      getUsername (senderId) {
+        let senderName = senderId
+        if (senderId !== '') {
+          let sender = this.$store.getters.getUserById(senderId)
+          if (sender !== undefined) {
+            senderName = senderId === this.$store.getters.getMyId ? 'You' : sender.username
+          }
+        }
+        return senderName
+      },
       setIsPinging (value) {
         this.currentlyTryingToPing = value
       },
       createClientMessage (type, content) {
-        return JSON.stringify({'type': type, 'data': content, 'date': new Date()})
+        // , 'date': new Date()
+        return JSON.stringify({'type': type, 'data': content})
       }
     }
   }

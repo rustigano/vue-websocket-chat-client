@@ -1,14 +1,13 @@
 <template>
-    <div><span>{{ user.username }}</span> <span v-show="isMe">(you &#129412;)</span>
-
-
+    <div>
+        <span v-if="isMe">&#129412; you <em>({{ user.username }})</em></span>
+        <span v-else>{{ user.username }}</span>
 <!--        <a class="button is-small" @click="startVideo()">
             <b-icon
                     icon="video"
                     type="is-info">
             </b-icon>
         </a>-->
-
     </div>
 </template>
 <script>
