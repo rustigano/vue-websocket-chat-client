@@ -9,6 +9,8 @@
 
 * Connect supplying a username without a roundtrip, other connected users get notified
 * Chatroom: a 2D space where users are represented by an avatar (profile picture)
+* Create and delete chatrooms
+* Move from chatroom to chatroom
 * User list 
 * Move avatar across the chatroom: click anywhere in the chatroom and the avatar moves (animates) to that position 
 * Send and receive messages: messages are displayed in textballoons near the avatar in the chatroom, and also logged in a messagewindow 
