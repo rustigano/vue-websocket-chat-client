@@ -6,8 +6,13 @@
             <welcome v-if="!isConnected"></welcome>
         </transition>
         <keep-alive>
-            <b-modal :active.sync="isComponentModalActive" has-modal-card>
-                <connect-to-chat-window></connect-to-chat-window>
+            <b-modal :active.sync="connectToChatDialogActive" has-modal-card>
+                <connect-to-chat-dialog></connect-to-chat-dialog>
+            </b-modal>
+        </keep-alive>
+        <keep-alive>
+            <b-modal :active.sync="createRoomWindowActive" has-modal-card>
+                <create-room-dialog></create-room-dialog>
             </b-modal>
         </keep-alive>
     </section>
@@ -28,18 +33,20 @@
 </style>
 <script>
   import Navigation from '@/components/Navigation.vue'
-  import ConnectToChatWindow from '@/components/ConnectToChatWindow.vue'
+  import ConnectToChatDialog from '@/components/ConnectToChatDialog.vue'
+  import CreateRoomDialog from '@/components/CreateRoomDialog.vue'
   import Welcome from '@/components/Welcome.vue'
   import ChatInterface from '@/components/ChatInterface.vue'
 
   export default {
     name: 'app',
     components: {
-      Navigation, ConnectToChatWindow, Welcome, ChatInterface
+      Navigation, ConnectToChatDialog, CreateRoomDialog, Welcome, ChatInterface
     },
     data () {
       return {
-        isComponentModalActive: false
+        connectToChatDialogActive: false,
+        createRoomWindowActive: false
       }
     },
     computed: {
@@ -48,8 +55,11 @@
       }
     },
     created () {
-      this.$bus.$on('show-connect-window-event', (e) => {
-        this.isComponentModalActive = true
+      this.$bus.$on('show-connect-to-chat-dialog-event', (e) => {
+        this.connectToChatDialogActive = true
+      })
+      this.$bus.$on('show-create-room-dialog-event', (e) => {
+        this.createRoomWindowActive = true
       })
     }
   }

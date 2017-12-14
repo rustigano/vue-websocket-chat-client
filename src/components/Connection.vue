@@ -52,7 +52,10 @@
         this.conn.send(this.createClientMessage('move-to-room', {'id': e.roomId}))
       })
       this.$bus.$on('create-room-event', (e) => {
-        this.conn.send(this.createClientMessage('create-room', {'name': e.name}))
+        this.conn.send(this.createClientMessage('create-room', e))
+      })
+      this.$bus.$on('delete-room-event', (e) => {
+        this.conn.send(this.createClientMessage('delete-room', {'id': e.roomId}))
       })
     },
     methods: {
@@ -103,14 +106,20 @@
             case 'connect':
               this.$store.dispatch('setMyId', response.data.key)
               this.$store.dispatch('setUsers', response.data.users)
-              this.$store.dispatch('setRooms', response.data.rooms)
-              this.$store.dispatch('setRoom', response.data.room.id)
-              this.$toast.open('Welcome to the chat')
+                .then(this.$store.dispatch('setRooms', response.data.rooms))
+                .then(this.$store.dispatch('setRoom', response.data.room.id))
+                .then(this.$toast.open({
+                  message: 'Welcome to the chat',
+                  queue: false
+                }))
               break
             case 'disconnect':
               clearInterval(this.clientPingPongInterval)
               if (this.$store.getters.getWhisperingTo === response.sender) this.$store.dispatch('setWhisperingTo', undefined)
-              this.$toast.open(senderName + ' has left the chat')
+              this.$toast.open({
+                message: senderName + ` has left the chat`,
+                queue: false
+              })
               this.$store.dispatch('deleteUser', response.sender)
               break
             case 'server-pong':
@@ -128,15 +137,20 @@
                 })
                 let u = this.$store.getters.getUserById(response.sender)
                 senderName = u.username
-                this.$toast.open(senderName + ' has joined the chat')
+                this.$toast.open({
+                  message: `${senderName} has joined the chat`,
+                  queue: false
+                })
               }
               break
             case 'set-avatar':
               this.$store.dispatch('changeAvatar', {id: response.sender, image: response.data.image})
-              this.$toast.open(senderName + ' changed avatar')
+              this.$toast.open({
+                message: `${senderName} changed avatar`,
+                queue: false
+              })
               break
             case 'msg':
-              // if (response.sender === this.$store.getters.getMyId) senderName = 'me'
               this.$store.dispatch('createMessage', {
                 sender: senderName,
                 message: response.data.msg,
@@ -154,30 +168,43 @@
             case 'create-room':
               this.$store.dispatch('createRoom', response.data.room)
               if (response.sender === this.$store.getters.getMyId) {
-                this.$toast.open('Room created')
+                this.$toast.open({
+                  message: `Your room '${response.data.room.name}' has been created`,
+                  type: 'is-info',
+                  queue: false
+                })
               }
               break
+            case 'room-deleted':
+              this.$store.dispatch('deleteRoom', response.data.id)
+              break
             case 'enters-room':
-              // als ik dan room en users vervangen
               if (response.sender === this.$store.getters.getMyId) {
                 this.$store.dispatch('truncateUserList')
                   .then(this.$store.dispatch('setRoom', response.data.roomId))
                   .then(this.$store.dispatch('setUsers', response.data.users))
-                  .then(this.$toast.open('You entered the room'))
+                  .then(() => {
+                    let room = this.$store.getters.getRoom
+                    this.$toast.open({
+                      message: `Welcome to ${room.name}`,
+                      queue: false
+                    })
+                  })
               } else {
                 this.$store.dispatch('createUser', response.data.user).then(
-                  this.$toast.open(this.getUsername(response.data.user.id) + ' entered the room')
+                  this.$toast.open({
+                    message: `${this.getUsername(response.data.user.id)} entered the room`,
+                    queue: false
+                  })
                 )
               }
               break
             case 'leaves-room':
-              // user-list aanpassen
+              this.$toast.open(senderName + ' left the room')
               this.$store.dispatch('deleteUser', response.sender)
-              // this.$store.dispatch('setRoom', response.data.room)
-              this.$toast.open(senderName + ' left to other room')
               break
             default:
-              console.log('unknown response type')
+              console.warn('unknown response type')
               break
           }
         }
@@ -196,7 +223,6 @@
         this.currentlyTryingToPing = value
       },
       createClientMessage (type, content) {
-        // , 'date': new Date()
         return JSON.stringify({'type': type, 'data': content})
       }
     }

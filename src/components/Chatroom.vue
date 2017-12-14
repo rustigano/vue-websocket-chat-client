@@ -12,6 +12,7 @@
             <avatar
                     v-for="(user, index) in users"
                     v-bind:user="user"
+                    v-bind:roomRect="roomRect"
                     v-bind:index="index"
                     v-bind:key="user.id"
                     :index="index"
@@ -21,6 +22,7 @@
             <text-balloon
                     v-for="(balloon, index) in balloons"
                     v-bind:balloon="balloon"
+                    v-bind:roomRect="roomRect"
                     v-bind:index="index"
                     v-bind:key="balloon.id"
                     :index="index"
@@ -54,7 +56,11 @@
     }
 
     .avatar {
-        position: absolute;
+        margin: 0;
+        padding: 0;
+        /*border: 1px solid red;*/
+        display: block;
+        position: fixed;
         max-width: 100px;
         text-align: center;
         transition: top 1s ease, left 1s ease, opacity 0.7s ease; /* Animate avatar when it receives a  new position */
@@ -85,6 +91,19 @@
         transform: translateY(30px);
     }
 
+    .balloon {
+        word-break: break-all;
+        max-width: 250px;
+        border-radius: 25px;
+        position: fixed;
+        transition: all 1s;
+    }
+
+    .balloon.whispered {
+        border-color: black;
+        border-style: dotted solid;
+    }
+
 </style>
 <script>
   import Avatar from '@/components/Avatar.vue'
@@ -93,6 +112,11 @@
   export default {
     name: 'Chatroom',
     components: {Avatar, TextBalloon},
+    data: function () {
+      return {
+        roomRect: {x: 0, y: 0, width: 100, height: 100}
+      }
+    },
     computed: {
       roomName () {
         return this.$store.getters.getRoom.name
@@ -118,10 +142,28 @@
         }
       }
     },
+    mounted () {
+      this.updateRoomRect()
+      window.addEventListener('scroll', this.updateRoomRect)
+      window.addEventListener('resize', this.updateRoomRect)
+    },
+    beforeDestroy () {
+      window.removeEventListener('scroll', this.updateRoomRect)
+      window.removeEventListener('resize', this.updateRoomRect)
+    },
     methods: {
+      updateRoomRect (e) {
+        this.roomRect = this.$el.getBoundingClientRect()
+        // console.log(this.roomRect)
+      },
       moveMyAvatar (e) {
         let x = e.offsetX
         let y = e.offsetY
+/*
+        console.log(e)
+        console.log(x, y)
+        console.log(this.roomRect.x + x, this.roomRect.y + y)
+*/
         this.$bus.$emit('move-my-avatar-event', {'x': x, 'y': y})
       },
       dragOverHandler (e) {},

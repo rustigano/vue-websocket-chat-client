@@ -1,5 +1,7 @@
 <template>
-    <div>
+    <tr>
+        <td>
+
         <span v-if="isMe">&#129412; you <em>({{ user.username }})</em></span>
         <span v-else>{{ user.username }}</span>
 <!--        <a class="button is-small" @click="startVideo()">
@@ -8,7 +10,8 @@
                     type="is-info">
             </b-icon>
         </a>-->
-    </div>
+        </td>
+    </tr>
 </template>
 <script>
   // import Peer from 'simple-peer'

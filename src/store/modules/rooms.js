@@ -1,8 +1,8 @@
-import Room from './models/Room'
-
 const state = {
+  /** @var Array rooms - all the rooms in the program */
   rooms: [],
-  room: {backgroundColor: '#00b3ee'}
+  /** @var Object room - The room the user is currently in */
+  room: {}
 }
 
 const getters = {
@@ -20,8 +20,7 @@ const getters = {
 
 const mutations = {
   createRoom (state, r) {
-    let newRoom = new Room(r.id, r.creatorid, r.name, r.backgroundColor)
-    state.rooms.push(newRoom)
+    state.rooms.push(r)
   },
   updateRoom (state, room) {
     let indexOfRoom = state.rooms.findIndex(item => item.id === room.id)
@@ -46,7 +45,10 @@ const mutations = {
 
 const actions = {
   setRooms (context, rooms) {
-    rooms.forEach(room => context.commit('createRoom', room))
+    return new Promise((resolve, reject) => {
+      rooms.forEach(room => context.commit('createRoom', room))
+      resolve()
+    })
   },
   createRoom (context, room) {
     context.commit('createRoom', room)

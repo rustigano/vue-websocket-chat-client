@@ -76,7 +76,7 @@
     },
     methods: {
       showConnectionWindow () {
-        this.$bus.$emit('show-connect-window-event')
+        this.$bus.$emit('show-connect-to-chat-dialog-event')
       },
       disconnectFromChat () {
         this.isDisconnecting = true

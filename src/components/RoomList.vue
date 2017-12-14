@@ -1,64 +1,71 @@
 <template>
-    <b-collapse class="card room-list" :open.sync="isOpen">
-        <div slot="trigger" class="card-header">
-            <p class="card-header-title">Rooms</p>
-            <a class="card-header-icon">
-                <b-icon :icon="isOpen ?
-                        'menu-down' : 'menu-up'">
-                </b-icon>
+
+    <div class="content">
+        <section v-bind:style="{ height: componentHeight - 75  + 'px'}">
+            <b-table
+                    :data="rooms"
+
+                    :bordered="true"
+                    :striped="true"
+                    :narrowed="false"
+                    :hoverable="true">
+
+                <template slot-scope="props">
+                    <b-table-column label="rooms">
+                        <b-icon
+                                icon="account-multiple"
+                                v-bind:style="{color: props.row.backgroundColor}">
+                        </b-icon>
+                        <a class="button"
+                           v-bind:class="{vet: isCurrentRoom(props.row)}"
+                           @click="moveToRoom(props.row)">
+                            {{ props.row.name }}
+                        </a>
+                        <template v-if="isMine(props.row)">(yours &#129412;)
+                            <a class="button is-small is-white"
+                               @click="confirmDelete(props.row)"><b-icon icon="minus-circle" type="is-danger"></b-icon></a>
+                        </template>
+                    </b-table-column>
+                </template>
+
+            </b-table>
+        </section>
+        <footer>
+            <a class="button is-primary"
+               @click="createRoom()">
+                <b-icon icon="account-multiple-plus"></b-icon>
+                <span>Create</span>
             </a>
-        </div>
-        <div class="card-content">
-            <div class="content">
-                <room-list-item
-                        v-for="(room, index) in rooms"
-                        v-bind:room="room"
-                        v-bind:index="index"
-                        v-bind:key="room.id"
-                        :index="index"
-                ></room-list-item>
-            </div>
-        </div>
-        <footer class="card-footer">
-            <a class="card-footer-item"
-               @click="createRoom">Create</a>
         </footer>
-    </b-collapse>
+    </div>
+
 </template>
 <style scoped>
-    .room-list {
+    .vet {
+        font-weight: bold
+    }
+
+    .content {
+        height: 100%;
+    }
+
+    section {
+        overflow: auto;
+        width: auto;
+        height: auto;
+    }
+
+    footer {
+        margin-top: 10px;
         position: relative;
-        top: 0;
+        bottom: 0;
     }
 </style>
-<script>
-  import RoomListItem from '@/components/RoomListItem.vue'
 
+<script>
   export default {
     name: 'RoomList',
-    components: {RoomListItem},
-    data: function () {
-      return {
-        isOpen: true
-      }
-    },
-    watch: {
-      // When the dimensions of the userlist have changed
-      // Collapsable is opened or closed or
-      // users have been added or removed
-      // fire an event to notify the ChatInterface component
-      // so it knows that the height of the
-      // messagelist component needs to be re-calculated.
-      // The event is fired after a slight delay so we can assume that
-      // by that time the re-adjusting of the component
-      // (opening or closing animation) has been completed.
-      isOpen: function () {
-        setTimeout(() => this.$bus.$emit('userlist-dimensions-changed-event'), 1500)
-      },
-      users: function () {
-        setTimeout(() => this.$bus.$emit('userlist-dimensions-changed-event'), 750)
-      }
-    },
+    props: ['componentHeight'],
     computed: {
       rooms () {
         return this.$store.getters.getRooms
@@ -66,7 +73,38 @@
     },
     methods: {
       createRoom () {
-        this.$bus.$emit('create-room-event', {'name': 'The cool new room'})
+        this.$bus.$emit('show-create-room-dialog-event')
+      },
+      moveToRoom (targetRoom) {
+        if (this.isCurrentRoom(targetRoom)) {
+          this.$toast.open({
+            message: 'You are already in this room',
+            queue: false,
+            type: 'is-warning'
+          })
+        } else {
+          this.$bus.$emit('move-to-room-event', {'roomId': targetRoom.id})
+        }
+      },
+      confirmDelete (targetRoom) {
+        this.$dialog.confirm({
+          title: `Deleting room`,
+          message: `Are you sure you want to <b>delete</b> the room'${targetRoom.name}'? This action cannot be undone.`,
+          confirmText: 'Delete room',
+          type: 'is-danger',
+          hasIcon: true,
+          onConfirm: () => this.deleteRoom(targetRoom)
+        })
+      },
+      deleteRoom (targetRoom) {
+        this.$toast.open('Room deleted!')
+        this.$bus.$emit('delete-room-event', {'roomId': targetRoom.id})
+      },
+      isMine (room) {
+        return room.creatorId === this.$store.getters.getMyId
+      },
+      isCurrentRoom (room) {
+        return room.id === this.$store.getters.getRoom.id
       }
     }
   }

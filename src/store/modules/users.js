@@ -50,19 +50,19 @@ const mutations = {
     const user = state.users.find(user => user.id === id)
     user.avatar = image
   },
-  deleteUser (state, userid) {
-    let index = state.users.findIndex(item => item.id === userid)
+  deleteUser (state, userId) {
+    let index = state.users.findIndex(item => item.id === userId)
     if (index > -1) {
       state.users.splice(index, 1)
     } else {
-      // console.log('error while trying to delete user', userid)
+      // console.log('error while trying to delete user', userId)
     }
   },
   truncateUserList (state) {
     state.users = []
   },
-  setWhisperingTo (state, userid) {
-    state.whisperingTo = userid
+  setWhisperingTo (state, userId) {
+    state.whisperingTo = userId
   }
 }
 
@@ -94,8 +94,8 @@ const actions = {
   changeAvatar (context, {id, image}) {
     context.commit('changeAvatar', {id, image})
   },
-  deleteUser (context, userid) {
-    context.commit('deleteUser', userid)
+  deleteUser (context, userId) {
+    context.commit('deleteUser', userId)
   },
   truncateUserList (context) {
     return new Promise((resolve, reject) => {
@@ -103,8 +103,8 @@ const actions = {
       resolve()
     })
   },
-  setWhisperingTo (context, userid) {
-    context.commit('setWhisperingTo', userid)
+  setWhisperingTo (context, userId) {
+    context.commit('setWhisperingTo', userId)
   }
 }
 

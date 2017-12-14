@@ -1,13 +1,16 @@
 <template>
     <div class="container is-widescreen">
         <div class="columns">
-            <div class="column is-three-quarters">
+            <div class="column">
+                <room-list v-bind:componentHeight="roomListComponentHeight"></room-list>
+            </div>
+
+            <div class="column is-three-fifths">
                 <chatroom></chatroom>
 
             </div>
             <div class="column">
                 <user-list class="is-hidden-mobile"></user-list>
-                <room-list></room-list>
                 <messages class="is-hidden-mobile" v-bind:componentHeight="messageListComponentHeight"></messages>
                 <message-input v-bind:columnWidth="columnWidth"></message-input>
             </div>
@@ -29,6 +32,7 @@
     },
     data: function () {
       return {
+        roomListComponentHeight: 25,
         messageListComponentHeight: 25,
         columnWidth: 100
       }
@@ -63,10 +67,10 @@
           // Is bigger than mobile - message input element gets width of userlist:
           let chatroomElement = document.getElementsByClassName('chatroom')[0]
           this.messageListComponentHeight = chatroomElement.clientHeight - (userlistElement.clientHeight + msgInputElement.clientHeight)
+          this.roomListComponentHeight = chatroomElement.clientHeight
           this.columnWidth = userlistElement.clientWidth
         }
       }
     }
-
   }
 </script>
