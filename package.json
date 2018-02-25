@@ -35,8 +35,7 @@
     "simple-peer": "^8.1.1",
     "vue": "^2.5.2",
     "vue-color": "^2.4.3",
-    "vuex": "^3.0.1",
-    "node-websocket-chatserver": "git+ssh://git@github.com:tobiasbeuving/node-websocket-chatserver.git"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
